@@ -7,7 +7,7 @@ install:
 
 environment:
   NuGetApiKey:
-    secure: ''
+    secure: +lqWVtVRayO6KNlJeu9lrnzmtGXreNPIr1Fn3dhXxYTJAHHAOPCPVWvFVkRX7wlr
 
   #Name of module/s to publish in PS Gallery. Use '' for none, '*' for all or a comma separated list: 'orange,pear'
   ModulesToPublish: '*'
