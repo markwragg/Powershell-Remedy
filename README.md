@@ -16,7 +16,7 @@ Alternatively use the download/clone button to download the module folder from t
     
 Following this, you will need to set your Remedy API URL and credentials. You can do this by running:
 
-    `Set-RemedyApiConfig -APIURL https://yourserver.example.com/api/whatever
+    Set-RemedyApiConfig -APIURL https://yourserver.example.com/api/whatever
     
 Which will then prompt you to enter credentials. These are saved as an encrypted string to your userprofile directory by default (you can redirect this by using `-File`).
 
