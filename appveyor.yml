@@ -2,6 +2,10 @@
 version: 1.0.{build}
 os: WMF 5
 
+skip_commits:
+  files:
+    - *.md
+
 install:
   - ps: . .\build.ps1 -Install
 
