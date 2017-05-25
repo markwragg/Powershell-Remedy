@@ -36,7 +36,7 @@ This will return a small object with a default set of frequently needed properti
 
 You can get the worklog entries associated with a ticket by doing the following:
 
-   Get-RemedyTicket -ID 12345 | Get-RemedyWorkLog
+    Get-RemedyTicket -ID 12345 | Get-RemedyWorkLog
 
 ### Get-RemedyInterface
 
