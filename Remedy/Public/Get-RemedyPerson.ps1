@@ -35,10 +35,10 @@
         $People = @()
         $Result.PSObject.Properties | ForEach-Object { $People += $_.Value } 
 
-        If ($Staff) { $People = $People | Where {$_.'Support Staff' -eq 'Yes'} }
+        If ($Staff) { $People = $People | Where-Object { $_.'Support Staff' -eq 'Yes' } }
 
         If (-not $Full){
-            $People = $People | Select 'Full Name','Remedy Login ID','JobTitle','Company','Internet E-mail','Support Staff','Submit Date'
+            $People = $People | Select-Object 'Full Name','Remedy Login ID','JobTitle','Company','Internet E-mail','Support Staff','Submit Date'
         }
                 
     } Catch {

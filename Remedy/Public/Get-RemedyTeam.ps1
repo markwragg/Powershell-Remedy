@@ -39,7 +39,7 @@
         $Result.PSObject.Properties | ForEach-Object { $Members += $_.Value }
     
         If (-not $Full){
-            $Members = $Members | Where {$_.'Assignment Availability' -eq 'Yes'} | Select 'Full Name','Login ID'
+            $Members = $Members | Where-Object { $_.'Assignment Availability' -eq 'Yes' } | Select-Object 'Full Name','Login ID'
         }
                 
     } Catch {
