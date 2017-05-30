@@ -38,6 +38,28 @@ You can get the worklog entries associated with a ticket by doing the following:
 
     Get-RemedyTicket -ID 12345 | Get-RemedyWorkLog
 
+### Get-RemedyTeam
+
+You can get the members of a specified Remedy Support Team with this command.
+
+    Get-RemedyTeam -Name Windows
+    
+This actually makes two calls to the API, it queries the `CTM:Support Group` schema to get the ID of the Support Group, then uses this to query the `CTM:Support Group Association` schema to get it's associated members.
+
+### Get-RemedyPerson
+
+This returns the details of a person from Remedy. This can be a customer or a member of staff:
+
+    Get-RemedyPerson -Name 'Joe Bloggs'
+    
+The cmdlet searches the 'Full Name' field and partial strings are accepted:
+
+    Get-RemedyPerson -Name 'John Sm'
+
+If you wish to only return Staff members you can use the `-Staff` switch to filter the result to just these:
+
+    Get-RemedyPerson -Name 'Tony Stark' -Staff
+
 ### Get-RemedyInterface
 
 You can see a list of available Remedy interfaces/forms by running:
