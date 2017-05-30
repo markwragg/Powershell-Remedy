@@ -32,9 +32,20 @@
         #Incidents assigned to the specified individual.
         [String]$Assignee,
 
+        #Incidents submitted by the specified individual.
+        [String]$Submitter,
+
         #Incidents filtered by specified status. You can also specific 'AllOpen' or 'AllClosed': AllOpen = ('New','Assigned','In Progress','Pending'); AllClosed = ('Closed','Resolved')
         [ValidateSet('AllOpen','AllClosed','New','Assigned','In Progress','Pending','Closed','Resolved')] 
         [String]$Status,
+        
+        #Incidents from a specific source.
+        [ValidateSet('Email','Automation','Phone','Self Service (Portal)','Event Management','Chat','Instant Message','E-Bonding')]
+        [String]$Source,
+        
+        #Exclude Incidents from a specific source.
+        [ValidateSet('Email','Automation','Phone','Self Service (Portal)','Event Management','Chat','Instant Message','E-Bonding')]
+        [String[]]$ExcludeSource,
         
         #Incidents with a 'submit date' that is after this date. Use US date format: mm/dd/yyyy
         [DateTime]$After,
@@ -60,6 +71,8 @@
     
     If ($Filter) { $StatusString = ($Filter | ForEach-Object { "('Status'=""$_"")" }) -join 'OR' }
     
+    If ($ExcludeSource) { $ExcludeSourceString = ($ExcludeSource | ForEach-Object { "('Reported Source'!=""$_"")" }) -join 'OR' }
+     
     ForEach ($IDNum in $ID) {
         Write-Verbose "$IDNum"
         
@@ -69,9 +82,13 @@
         If ($Team)     { $Filter += "'Assigned Group'=""$Team""" }
         If ($Customer) { $Filter += "'Organization'LIKE""%25$Customer%25""" }
         If ($Assignee) { $Filter += "'Assignee'LIKE""%25$Assignee%25""" }
+        If ($Submitter) { $Filter += "'Submitter'LIKE""%25$Submitter%25""" }
         
-        If ($After)    { $Filter += "'Submit Date'>""$($After.ToString("yyyy-MM-dd"))""" }
-        If ($Before)   { $Filter += "'Submit Date'<""$($Before.ToString("yyyy-MM-dd"))""" }
+        If ($Source)        { $Filter += "'Reported Source'=""$Source""" }
+        If ($ExcludeSource) { $Filter += $ExcludeSourceString }
+        
+        If ($After)  { $Filter += "'Submit Date'>""$($After.ToString("yyyy-MM-dd"))""" }
+        If ($Before) { $Filter += "'Submit Date'<""$($Before.ToString("yyyy-MM-dd"))""" }
 
         If ($StatusString) { $Filter += "($StatusString)" }
         $FilterString = $Filter -Join 'AND'

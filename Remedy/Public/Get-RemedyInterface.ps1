@@ -25,9 +25,13 @@ Function Get-RemedyInterface {
 
     Try {
         $Result = Invoke-RestMethod -URI $URL -Headers $Headers -ErrorAction Stop
+        
+        $Fields = @()
+        $Result.PSObject.Properties | ForEach-Object { $Fields += $_.Value }
+                
     } Catch {
         Write-Error $_
     }
 
-    Return $Result
+    Return $Fields
 }

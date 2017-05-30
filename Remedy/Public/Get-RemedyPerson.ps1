@@ -8,7 +8,13 @@
     [cmdletbinding()]
     Param(
         #Name of the person you want to return details of.
+        
+        [Parameter(ParameterSetName=’ByName’)]
         [String]$Name,
+
+        #Login ID of the person you want to return details of.
+        [Parameter(ParameterSetName=’ByID’)]
+        [String]$Login,
 
         #Use to return only people where Support Staff = Yes.
         [Switch]$Staff,
@@ -27,7 +33,10 @@
         Authorization = "Basic $EncodedCredentials"
     }
 
-    $URL = "$APIURL/CTM:People/'Full Name'LIKE""%25$Name%25"""
+    If ($Name)  { $FilterString = "'Full Name'LIKE""%25$Name%25""" }
+    If ($Login) { $FilterString = "'Remedy Login ID'LIKE""%25$Login%25""" }
+
+    $URL = "$APIURL/CTM:People/$FilterString"
 
     Try {
         $Result = Invoke-RestMethod -URI $URL -Headers $Headers -ErrorAction Stop
