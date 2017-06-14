@@ -1,12 +1,4 @@
-﻿Function Decrypt ($String) {
-    If($String -is [System.Security.SecureString]) {
-        [System.Runtime.InteropServices.marshal]::PtrToStringAuto(
-            [System.Runtime.InteropServices.marshal]::SecureStringToBSTR(
-                $string))
-    }
-}
-
-Function Test-RemedyApiConfig {
+﻿Function Test-RemedyApiConfig {
 <#
 .SYNOPSIS
     Tests credentials and URL for use with the Remedy API.
@@ -18,9 +10,8 @@ Function Test-RemedyApiConfig {
     )
     
     Try {
-        $Config = (Import-Clixml -Path $Path)
-        $Config.Credentials = Decrypt $Config.Credentials
-
+        $Config = Get-RemedyApiConfig -Path $Path
+        
         Try {
 
             $Headers = @{ Authorization = "Basic $($Config.Credentials)" }

@@ -35,10 +35,6 @@ If ($Install) {
 
     Write-Host 'Installing PSScriptAnalyzer ..'
     Install-Module PSScriptAnalyzer -Repository PSGallery -force
-
-    Write-Host 'Installing PSSlack ..'
-    Install-Module PSSlack -Repository PSGallery -force
-
 }
 
 
