@@ -12,7 +12,7 @@
 RootModule = 'Remedy.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0'
+ModuleVersion = '1.0.17'
 
 # ID used to uniquely identify this module
 GUID = '06a9a89b-244f-428a-8cdf-849b7090dc85'
@@ -69,13 +69,13 @@ PowerShellVersion = '3.0'
 FunctionsToExport = @('Get-RemedyApiConfig','Get-RemedyInterface','Get-RemedyPerson','Get-RemedyTeam','Get-RemedyTicket','Get-RemedyWorkLog','Invoke-Remedy','Set-RemedyApiConfig','Test-RemedyApiConfig','Update-RemedyApiConfig')
 
 # Cmdlets to export from this module
-#CmdletsToExport = '*'
+CmdletsToExport = '*'
 
 # Variables to export from this module
-#VariablesToExport = '*'
+VariablesToExport = '*'
 
 # Aliases to export from this module
-#AliasesToExport = '*'
+AliasesToExport = '*'
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()
@@ -84,7 +84,7 @@ FunctionsToExport = @('Get-RemedyApiConfig','Get-RemedyInterface','Get-RemedyPer
 # ModuleList = @()
 
 # List of all files packaged with this module
-# FileList = @()
+FileList = @('\Private\*','\Public\*')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -92,7 +92,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+         Tags = @('Remedy','BMC')
 
         # A URL to the license for this module.
         # LicenseUri = ''

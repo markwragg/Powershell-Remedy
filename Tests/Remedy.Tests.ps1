@@ -1,4 +1,4 @@
-﻿Import-Module "$PSScriptRoot\..\Remedy\*.psd1" -Force -Verbose
+﻿Import-Module "$PSScriptRoot\..\Remedy\*.psd1" -Force
 
 
 Describe "Get-RemedyTicket" -Tag Integration {
