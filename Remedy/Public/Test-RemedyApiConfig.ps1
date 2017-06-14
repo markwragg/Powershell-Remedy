@@ -1,4 +1,12 @@
-﻿Function Test-RemedyApiConfig {
+﻿Function Decrypt ($String) {
+    If($String -is [System.Security.SecureString]) {
+        [System.Runtime.InteropServices.marshal]::PtrToStringAuto(
+            [System.Runtime.InteropServices.marshal]::SecureStringToBSTR(
+                $string))
+    }
+}
+
+Function Test-RemedyApiConfig {
 <#
 .SYNOPSIS
     Tests credentials and URL for use with the Remedy API.
@@ -8,14 +16,6 @@
     Param(
         $Path = "$env:USERPROFILE\$env:USERNAME-RemedyApi.xml"
     )
-    
-    Function Decrypt ($String) {
-        If($String -is [System.Security.SecureString]) {
-            [System.Runtime.InteropServices.marshal]::PtrToStringAuto(
-                [System.Runtime.InteropServices.marshal]::SecureStringToBSTR(
-                    $string))
-        }
-    }
     
     Try {
         $Config = (Import-Clixml -Path $Path)

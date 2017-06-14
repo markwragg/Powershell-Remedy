@@ -1,4 +1,11 @@
-﻿Function Set-RemedyApiConfig {
+﻿Function Encrypt ([string]$string) {
+    If($String -notlike '')
+    {
+        ConvertTo-SecureString -String $string -AsPlainText -Force
+    }
+}
+
+Function Set-RemedyApiConfig {
 <#
 .SYNOPSIS
     Set credentails and URL for use with the Remedy API. This stores the credentials as an encrypted string.
@@ -22,13 +29,6 @@
     $User = $Credentials.GetNetworkCredential().username
     $Pass = $Credentials.GetNetworkCredential().password
     $EncodedCreds = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("$user`:$pass"))
-
-    Function Encrypt ([string]$string) {
-        If($String -notlike '')
-        {
-            ConvertTo-SecureString -String $string -AsPlainText -Force
-        }
-    }
 
     $Properties = @{
         Credentials = Encrypt $EncodedCreds
