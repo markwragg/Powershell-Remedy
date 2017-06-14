@@ -9,10 +9,12 @@
 #>
     [cmdletbinding(SupportsShouldProcess = $true)]
     Param(
-        [pscredential]$Credentials = (Get-Credential -UserName $env:USERNAME -Message "Enter Remedy login details"),
+        [pscredential]$Credentials = (Get-Credential -UserName ($env:USERNAME).ToLower() -Message "Enter Remedy login details"),
         
         [Parameter(Mandatory=$true)]
         [string]$APIURL,
+
+        [string]$IncidentURL,
         [string]$Path = "$env:USERPROFILE\$env:USERNAME-RemedyApi.xml",
         [switch]$Force   
     )
@@ -31,6 +33,7 @@
     $Properties = @{
         Credentials = Encrypt $EncodedCreds
         APIURL = $APIURL
+        IncidentURL = $IncidentURL
     }
 
     $Config = New-Object -TypeName PSObject -Property $Properties 

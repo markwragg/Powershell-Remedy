@@ -17,6 +17,8 @@ Function Get-RemedyInterface {
         [String]$APIURL = (Get-RemedyApiConfig).APIURL
     )
 
+    If (-not (Test-RemedyApiConfig)) { Throw 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.' }
+
     $Headers = @{
         Authorization = "Basic $EncodedCredentials"
     }
@@ -24,14 +26,9 @@ Function Get-RemedyInterface {
     $URL = "$APIURL/$Interface"
 
     Try {
-        $Result = Invoke-RestMethod -URI $URL -Headers $Headers -ErrorAction Stop
-        
-        $Fields = @()
-        $Result.PSObject.Properties | ForEach-Object { $Fields += $_.Value }
+        Invoke-RestMethod -URI $URL -Headers $Headers -ErrorAction Stop
                 
     } Catch {
         Write-Error $_
     }
-
-    Return $Fields
 }

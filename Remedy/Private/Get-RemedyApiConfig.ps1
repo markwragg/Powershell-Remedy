@@ -15,8 +15,12 @@
         }
     }
         
-    $Config = (Import-Clixml -Path $Path)
-    $Config.Credentials = Decrypt $Config.Credentials
+    Try {
+        $Config = (Import-Clixml -Path $Path)
+        $Config.Credentials = Decrypt $Config.Credentials
 
-    Write-Output $Config
+        $Config
+    } Catch {
+        Write-Error "Remedy API config not set. Use Set-RemedyApiConfig first."
+    }
 }

@@ -35,13 +35,17 @@ If ($Install) {
 
     Write-Host 'Installing PSScriptAnalyzer ..'
     Install-Module PSScriptAnalyzer -Repository PSGallery -force
+
+    Write-Host 'Installing PSSlack ..'
+    Install-Module PSSlack -Repository PSGallery -force
+
 }
 
 
 If ($Test) {
 
     $testResultsFile = 'TestsResults.xml'
-    $Results = Invoke-Pester -Script .\Tests\*.Tests.ps1 -OutputFormat NUnitXml -OutputFile $testResultsFile -PassThru
+    $Results = Invoke-Pester -Script .\Tests\*.Tests.ps1 -OutputFormat NUnitXml -ExcludeTag Integration -OutputFile $testResultsFile -PassThru
 
     If ($env:APPVEYOR){
         Write-Host "Uploading results to AppVeyor .."

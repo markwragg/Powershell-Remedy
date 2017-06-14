@@ -20,6 +20,8 @@
         [String]$APIURL = (Get-RemedyApiConfig).APIURL
     )
 
+    If (-not (Test-RemedyApiConfig)) { Throw 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.' }
+
     $Headers = @{
         Authorization = "Basic $EncodedCredentials"
     }
