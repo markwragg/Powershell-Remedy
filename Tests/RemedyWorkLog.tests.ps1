@@ -1,4 +1,4 @@
-﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+﻿$here = $PSScriptRoot
 $tfn = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 $sut = Get-ChildItem "$here\..\Remedy\*-$tfn" -Recurse
