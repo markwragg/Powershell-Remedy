@@ -70,7 +70,7 @@ If ($Deploy) {
 
     $ModulesToPublish | ForEach-Object {
         
-        $ModuleManifest = Get-ChildItem "$pwd\$_\*.psd1"
+        $ModuleManifest = Get-ChildItem "$PSScriptRoot\$_\*.psd1"
         
         If ($ModuleManifest) {
 
@@ -79,12 +79,17 @@ If ($Deploy) {
             $ManifestFullName = $ModuleManifest.FullName
             $env:psmodulepath = $env:psmodulepath + ';' + $ModulePath
             
+            Write-Host "Module           : $Module"
+            Write-Host "ModulePath       : $ModulePath"
+            Write-Host "ManifestFullName : $ManifestFullName"
+            Write-Host "env:psmodulepath : $env:psmodulepath"
+
             If (!$InitialPublish) {
                         
                 Write-Host "$Module : Checking module for differences with existing PowerShell Gallery version .."
             
                 Try {
-                    Save-Module -Name $Module -Path .\ -ErrorAction Stop
+                    Save-Module -Name $Module -Path $PSScriptRoot -ErrorAction Stop
                     $ModuleContents    = Get-ChildItem -Exclude *.psd1 "$ModulePath\" | Where-Object { -not $_.PsIsContainer } -ErrorAction Stop | Get-Content
                     $PSGModuleContents = Get-ChildItem -Exclude *.psd1 "$ModulePath\*\*" | Where-Object { -not $_.PsIsContainer } -ErrorAction Stop | Get-Content
                 } Catch {
@@ -94,6 +99,8 @@ If ($Deploy) {
                 }
 
                 $Differences = Compare-Object $ModuleContents $PSGModuleContents
+
+                Write-Host $Differences
 
                 If ($Differences){
             
@@ -138,7 +145,7 @@ If ($Deploy) {
             }
             
         } Else {
-            Throw "$Module : Could not locate a module manifest in $pwd\$Module\"
+            Throw "$Module : Could not locate a module manifest in $PSScriptRoot\$Module\"
         }
         
         Write-Host "$Module published successfully." -ForegroundColor Green
