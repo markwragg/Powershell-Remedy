@@ -17,8 +17,8 @@
 if(
     $env:BHModulePath -and
     $env:BHBuildSystem -ne 'Unknown' -and
-    $env:BHBranchName -eq "master" -and
-    #$env:BHCommitMessage -match '!deploy'
+    $env:BHBranchName -eq "master" <#-and
+    $env:BHCommitMessage -match '!deploy'#>
 )
 {
     Deploy Module {
