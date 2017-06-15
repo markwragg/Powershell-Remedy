@@ -15,7 +15,7 @@
 
 # Publish to gallery with a few restrictions
 if(
-    $env:BHPSModulePath -and
+    $env:BHModulePath -and
     $env:BHBuildSystem -ne 'Unknown' -and
     $env:BHBranchName -eq "master" -and
     $env:BHCommitMessage -match '!deploy'
@@ -23,7 +23,7 @@ if(
 {
     Deploy Module {
         By PSGalleryModule {
-            FromSource $ENV:BHPSModulePath
+            FromSource $ENV:BHModulePath
             To PSGallery
             WithOptions @{
                 ApiKey = $ENV:NugetApiKey
