@@ -23,10 +23,9 @@ Describe 'Get-RemedyPerson' -Tag Unit {
             'Exact' { $Settings.Add('Exact',$True) }
         }
 
-        $Option = @()
-        If ($_) { $_ | ForEach-Object { $Option += ", -$_" } }
+        If ($_) { $Option = '-' + ($_ -Join ' -') }
 
-        Context "Valid user tests $Option" {
+        Context "Valid user tests for Get-RemedyPerson $Option" {
 
             It 'Should not Throw for a valid user' {
                 {Get-RemedyPerson @Settings } | Should Not Throw
@@ -49,7 +48,7 @@ Describe 'Get-RemedyPerson' -Tag Unit {
             }
         }
 
-        Context "Valid user tests , -Full $Option" {
+        Context "Valid user tests for Get-RemedyPerson -Full $Option" {
 
             $SomeUserFull = Get-RemedyPerson @Settings -Full
 
@@ -68,7 +67,7 @@ Describe 'Get-RemedyPerson' -Tag Unit {
             }
         }
 
-        Context "Invalid User" {
+        Context "Invalid User for Get-RemedyPerson $Option" {
     
             Mock Invoke-RestMethod -Verifiable { }
         
@@ -82,16 +81,16 @@ Describe 'Get-RemedyPerson' -Tag Unit {
                 $NotAUser | Should BeNullOrEmpty 
             }
         }
-    }    
 
-    Context 'Failed API config test' {
+        Context "Failed API config test for Get-RemedyPerson $Option" {
 
-        Mock Test-RemedyApiConfig -Verifiable { $False }
+            Mock Test-RemedyApiConfig -Verifiable { }
     
-        It "Should Throw" {
-            {Get-RemedyInterface} | Should Throw 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
+            It "Should Throw" {
+                {Get-RemedyPerson @Settings} | Should Throw 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
+            }
         }
-    }
+    }    
 
     Assert-VerifiableMocks
 }

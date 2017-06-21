@@ -29,6 +29,10 @@
         #Incidents raised by the specified customer.
         [String]$Customer,
         
+        #Incidents raised for a specific configuration item, e.g a server or other device.
+        [Alias('CI')]
+        [String]$ConfigurationItem,
+        
         #Incidents assigned to the specified individual.
         [String[]]$Assignee,
 
@@ -97,6 +101,7 @@
         If ($IDNum)    { $Filter += "'Incident Number'$Op""$Wc$IDNum""" }
         If ($Team)     { $Filter += "'Assigned Group'=""$Team""" }
         If ($Customer) { $Filter += "'Organization'$Op""$Wc$Customer$Wc""" }
+        If ($ConfigurationItem) { $Filter += "'CI'$Op""$Wc$ConfigurationItem$Wc""" }
         
         If ($Assignee -is [Array]) { 
             $AssigneeString = ($Assignee | ForEach-Object { "('Assignee'$Op""$Wc$_$Wc"")" }) -join 'OR'

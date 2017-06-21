@@ -8,7 +8,7 @@ $sut | ForEach-Object { . $_.FullName }
 Describe "Set-RemedyApiConfig" -Tag Unit {
     
     $ExportClixml = Get-Command Export-Clixml
-    $TestPath = "$here\SetRemedyApiConfig.xml"
+    $TestPath = "SetRemedyApiConfig.xml"
     
     Mock Export-Clixml -Verifiable {
         $InputObject | & $ExportClixml -Path $TestPath
@@ -48,11 +48,15 @@ Describe "Set-RemedyApiConfig" -Tag Unit {
 Describe "Get-RemedyApiConfig" -Tag Unit {
     
     $ImportClixml = Get-Command Import-Clixml
-
+    
     Context 'Valid config' {    
     
         Mock Import-Clixml -Verifiable { 
-            & $ImportClixml -Path $here\SetRemedyApiConfig.xml
+            & $ImportClixml -Path SetRemedyApiConfig.xml
+        }
+
+        Mock Decrypt -Verifiable {
+            "dGVzdHVzZXI6dGVzdHBhc3N3b3Jk"
         }
     
         It "Should not Throw" {
@@ -148,6 +152,8 @@ Describe "Test-RemedyApiConfig" -Tag Unit {
             & $ImportClixml -Path $here\Mock-TestRemedyApiConfig-InvokeWebRequest.xml   
         }
 
+        Mock Update-RemedyApiConfig { }
+
         It "Should not Throw" {
             {Test-RemedyApiConfig} | Should Not Throw
         }
@@ -172,6 +178,7 @@ Describe "Test-RemedyApiConfig" -Tag Unit {
             $Result = If ($UpdateConfigCount -lt 3) { "$here\Mock-TestRemedyApiConfig-InvokeWebRequest-AuthFail.xml" } Else { "$here\Mock-TestRemedyApiConfig-InvokeWebRequest.xml" }
             Import-Clixml -Path $Result
         }
+        
         Mock Update-RemedyApiConfig -Verifiable { $Script:UpdateConfigCount++ }
         
         It "Should return False (first test)" {
@@ -190,6 +197,9 @@ Describe "Test-RemedyApiConfig" -Tag Unit {
         Mock Get-RemedyApiConfig -Verifiable { 
             Import-Clixml -Path $here\Mock-GetRemedyApiConfig.xml
         }
+        
+        Mock Update-RemedyApiConfig { }
+
         Mock Invoke-WebRequest -Verifiable { Import-Clixml -Path "$here\Mock-TestRemedyApiConfig-InvokeWebRequest-BadResponse.xml" }
         
         It "Should return False for a bad URL" {
