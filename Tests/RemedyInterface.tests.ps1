@@ -31,5 +31,24 @@ Describe "Get-RemedyInterface" -Tag Unit {
         }
     }
 
+    Context 'Failed API config test' {
+
+        Mock Test-RemedyApiConfig -Verifiable { $False }
+    
+        It "Should Throw" {
+            {Get-RemedyInterface} | Should Throw 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
+        }
+    }
+
+    Context 'Failed API connectivity' {
+
+        Mock Invoke-RestMethod -Verifiable { Throw 'Some error' }
+    
+        It "Should Throw" {
+            {Get-RemedyInterface} | Should Throw 'Some error'
+        }
+    }
+
+
     Assert-VerifiableMocks
 }

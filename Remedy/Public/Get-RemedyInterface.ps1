@@ -29,6 +29,6 @@ Function Get-RemedyInterface {
         Invoke-RestMethod -URI $URL -Headers $Headers -ErrorAction Stop
                 
     } Catch {
-        Write-Error $_
+        Throw $_
     }
 }

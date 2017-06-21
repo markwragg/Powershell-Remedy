@@ -21,6 +21,6 @@ Function Get-RemedyApiConfig {
 
         $Config
     } Catch {
-        Write-Error "Remedy API config not set. Use Set-RemedyApiConfig first."
+        Throw "Remedy API config not set. Use Set-RemedyApiConfig first."
     }
 }

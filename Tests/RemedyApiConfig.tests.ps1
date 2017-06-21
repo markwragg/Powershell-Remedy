@@ -48,32 +48,44 @@ Describe "Set-RemedyApiConfig" -Tag Unit {
 Describe "Get-RemedyApiConfig" -Tag Unit {
     
     $ImportClixml = Get-Command Import-Clixml
+
+    Context 'Valid config' {    
     
-    Mock Import-Clixml -Verifiable { 
-        & $ImportClixml -Path $here\SetRemedyApiConfig.xml
-    }
+        Mock Import-Clixml -Verifiable { 
+            & $ImportClixml -Path $here\SetRemedyApiConfig.xml
+        }
     
-    It "Should not Throw" {
-        {Get-RemedyApiConfig} | Should Not Throw
-    }
+        It "Should not Throw" {
+            {Get-RemedyApiConfig} | Should Not Throw
+        }
     
-    $GetConfig = Get-RemedyApiConfig
+        $GetConfig = Get-RemedyApiConfig
     
-    It "Should return config data" {
-        $GetConfig | Should Not BeNullOrEmpty
-    }
-    It "Should return an APIURL property" {
-        $GetConfig.APIURL | Should BeOfType String
-        $GetConfig.APIURL | Should Be 'https://mock.setconfig.com/arapi/midservername'
-    }
+        It "Should return config data" {
+            $GetConfig | Should Not BeNullOrEmpty
+        }
+        It "Should return an APIURL property" {
+            $GetConfig.APIURL | Should BeOfType String
+            $GetConfig.APIURL | Should Be 'https://mock.setconfig.com/arapi/midservername'
+        }
     
-    It "Should return an IncidentURL property" {
-        $GetConfig.IncidentURL | Should BeOfType String
-        $GetConfig.IncidentURL | Should Be 'https://mock.setconfig.com/arsys/forms/helpdesk'
+        It "Should return an IncidentURL property" {
+            $GetConfig.IncidentURL | Should BeOfType String
+            $GetConfig.IncidentURL | Should Be 'https://mock.setconfig.com/arsys/forms/helpdesk'
+        }
+        It "Should return a Credentials property" {
+            $GetConfig.Credentials | Should BeOfType String
+            $GetConfig.Credentials | Should Be 'dGVzdHVzZXI6dGVzdHBhc3N3b3Jk'
+        }
     }
-    It "Should return a Credentials property" {
-        $GetConfig.Credentials | Should BeOfType String
-        $GetConfig.Credentials | Should Be 'dGVzdHVzZXI6dGVzdHBhc3N3b3Jk'
+
+    Context 'Invalid config' {    
+    
+        Mock Import-Clixml -Verifiable { Throw }
+    
+        It "Should Throw" {
+            {Get-RemedyApiConfig} | Should Throw 'Remedy API config not set. Use Set-RemedyApiConfig first.'
+        }
     }
     
     Assert-VerifiableMocks
