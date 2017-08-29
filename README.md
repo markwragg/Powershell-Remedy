@@ -38,6 +38,16 @@ You can get the worklog entries associated with a ticket by doing the following:
 
     Get-RemedyTicket -ID 12345 | Get-RemedyWorkLog
 
+### Get-RemedyChange
+
+You can get a specific change by partial or full Change ID Number as follows:
+
+    Get-RemedyChange -ID 12345
+
+This will return a small object with a default set of frequently needed properties available. To return an object with all of the properties available via the API add the `-Full` switch:
+
+    Get-RemedyChange -ID 12345 -Full
+
 ### Get-RemedyTeam
 
 You can get the members of a specified Remedy Support Team with this command.
