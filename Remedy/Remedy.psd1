@@ -66,7 +66,7 @@ PowerShellVersion = '3.0'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = @('Get-RemedyApiConfig','Get-RemedyInterface','Get-RemedyPerson','Get-RemedyTeam','Get-RemedyTicket','Get-RemedyWorkLog','Invoke-Remedy','Set-RemedyApiConfig','Test-RemedyApiConfig','Update-RemedyApiConfig')
+FunctionsToExport = @('Get-RemedyApiConfig','Get-RemedyInterface','Get-RemedyPerson','Get-RemedyTeam','Get-RemedyTicket','Get-RemedyChange','Get-RemedyWorkLog','Invoke-Remedy','Set-RemedyApiConfig','Test-RemedyApiConfig','Update-RemedyApiConfig')
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
