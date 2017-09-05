@@ -1,7 +1,9 @@
-﻿Import-Module "$PSScriptRoot\..\Remedy\*.psd1" -Force
-
+﻿$here = $PSScriptRoot
+$sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
+$sut | ForEach-Object { . $_.FullName }
 
 Describe "Get-RemedyTicket" -Tag Integration {
+    Import-Module "$PSScriptRoot\..\Remedy\*.psd1" -Force
     
     Context "By ID" {
 

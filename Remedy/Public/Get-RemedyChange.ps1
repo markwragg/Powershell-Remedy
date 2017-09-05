@@ -58,10 +58,10 @@
         [ValidateSet('Low','Medium','High','Critical','')]
         [String[]]$Priority = '',
         
-        #Changes with a 'submit date' that is after this date. Use US date format: mm/dd/yyyy
+        #Changes with a 'scheduled start date' that is after this date. Use US date format: mm/dd/yyyy
         [DateTime]$After,
         
-        #Changes with a 'submit date' that is before this date. Use US date format: mm/dd/yyyy
+        #Changes with a 'scheduled start date' that is before this date. Use US date format: mm/dd/yyyy
         [DateTime]$Before,
 
         #Return all available data fields from Remedy.
@@ -102,8 +102,9 @@
         $Filter = @()
         
         If ($Exact) { $Op = '='; $Wc = '' } Else { $Op = 'LIKE'; $Wc = '%25' }
-
-        If ($IDNum)    { $Filter += "'Infrastructure Change ID'$Op""$Wc$IDNum""" }
+        If ($Exact -or $IDNum -match '^CRQ\d{12}') { $IDOp = '='; $IDWc = '' } Else { $IDOp = 'LIKE'; $IDWc = '%25' }
+        
+        If ($IDNum)    { $Filter += "'Infrastructure Change ID'$IDOp""$IDWc$IDNum""" }
         If ($Team)     { $Filter += "'ASGRP'=""$Team""" }
         If ($Customer) { $Filter += "'Customer Company'$Op""$Wc$Customer$Wc""" }
         If ($ConfigurationItem) { $Filter += "'zTmp_CIName'$Op""$Wc$ConfigurationItem$Wc""" }

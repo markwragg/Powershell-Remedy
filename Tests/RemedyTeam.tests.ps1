@@ -1,7 +1,5 @@
 ﻿$here = $PSScriptRoot
-$tfn = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-
-$sut = Get-ChildItem "$here\..\Remedy\*-$tfn" -Recurse
+$sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
 $sut | ForEach-Object { . $_.FullName }
 
 

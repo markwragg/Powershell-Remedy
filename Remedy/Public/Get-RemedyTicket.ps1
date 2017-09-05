@@ -47,10 +47,18 @@
         [ValidateSet('Email','Automation','Phone','Self Service (Portal)','Event Management','Chat','Instant Message','E-Bonding','')]
         [String]$Source = '',
         
+        #Incidents of a specific type.
+        [ValidateSet('User Service Restoration','User Service Request','Service Improvement','Infrastructure Event','')]
+        [String]$Type = '',
+
         #Exclude Incidents from a specific source.
         [ValidateSet('Email','Automation','Phone','Self Service (Portal)','Event Management','Chat','Instant Message','E-Bonding','')]
         [String[]]$ExcludeSource = '',
         
+        #Exclude Incidents of a specific type.
+        [ValidateSet('User Service Restoration','User Service Request','Service Improvement','Infrastructure Event','')]
+        [String[]]$ExcludeType = '',
+
         #Include Incidents of one or more specific priorities: Low, Medium, High, Critical.
         [ValidateSet('Low','Medium','High','Critical','')]
         [String[]]$Priority = '',
@@ -88,6 +96,13 @@
     
     If ($ExcludeSource) { $ExcludeSourceString = ($ExcludeSource | ForEach-Object { "('Reported Source'!=""$_"")" }) -join 'AND' }
     
+    If ($ExcludeType) {
+        $ExcludeTypeString = ($ExcludeType | ForEach-Object { 
+            If ($_ -eq 'Service Improvement'){ $_ = 'Infrastructure Restoration' }
+            "('Service Type'!=""$_"")" 
+         }) -join 'AND'
+    }
+
     If ($Priority) { $PriorityString = ($Priority | ForEach-Object { "('Priority'=""$_"")" }) -join 'OR' }
     
      
@@ -97,8 +112,9 @@
         $Filter = @()
         
         If ($Exact) { $Op = '='; $Wc = '' } Else { $Op = 'LIKE'; $Wc = '%25' }
-
-        If ($IDNum)    { $Filter += "'Incident Number'$Op""$Wc$IDNum""" }
+        If ($Exact -or $IDNum -match '^INC\d{12}') { $IDOp = '='; $IDWc = '' } Else { $IDOp = 'LIKE'; $IDWc = '%25' }
+            
+        If ($IDNum)    { $Filter += "'Incident Number'$IDOp""$IDWc$IDNum""" }
         If ($Team)     { $Filter += "'Assigned Group'=""$Team""" }
         If ($Customer) { $Filter += "'Organization'$Op""$Wc$Customer$Wc""" }
         If ($ConfigurationItem) { $Filter += "'CI'$Op""$Wc$ConfigurationItem$Wc""" }
@@ -118,7 +134,10 @@
         }
         
         If ($Source)        { $Filter += "'Reported Source'=""$Source""" }
+        If ($Type)          { If ($Type -eq 'Service Improvement'){ $Filter += "'Service Type'=""Infrastructure Restoration""" } Else { $Filter += "'Service Type'=""$Type""" } }
+        
         If ($ExcludeSource) { $Filter += "($ExcludeSourceString)" }
+        If ($ExcludeType)   { $Filter += "($ExcludeTypeString)" }
         If ($Priority)      { $Filter += "($PriorityString)" }
         
         If ($After)  { $Filter += "'Submit Date'>""$($After.ToString("yyyy-MM-dd"))""" }
