@@ -6,17 +6,9 @@ This project is a PowerShell module for interacting with the BMC Remedy ARS Rest
 
 ## Getting Started
 
-This module is published in the Gallery so if you are running PowerShell 5, you can install the Remedy module from the PowerShell Gallery via:
+After installation, you will need to set your Remedy API URL and credentials. You do this by running:
 
-    Install-Module -Name Remedy
-
-Alternatively use the download/clone button to download the module folder from this repo on to your computer into your `modules` directory and then load it with:
-
-    Import-Module Remedy
-    
-Following this, you will need to set your Remedy API URL and credentials. You can do this by running:
-
-    Set-RemedyApiConfig -APIURL https://yourserver.example.com/api/whatever
+    Set-RemedyAPIConfig -APIURL https://remedy-itsm.savvis.net/arapi/DC2ITSMAPPPD02 -IncidentURL https://remedy-itsm.savvis.net/arsys/forms/cmdbapppd/HPD:Help%20Desk
     
 Which will then prompt you to enter credentials. These are saved as an encrypted string to your userprofile directory by default (you can redirect this by using `-File`).
 
@@ -32,22 +24,88 @@ This will return a small object with a default set of frequently needed properti
 
     Get-RemedyTicket -ID 12345 -Full
 
-### Get-RemedyWorkLog
-
-You can get the worklog entries associated with a ticket by doing the following:
-
-    Get-RemedyTicket -ID 12345 | Get-RemedyWorkLog
+There are many other parameters for filtering/retrieving resuts in other ways e.g by `-Team`, `-Submitter`, `-Customer` etc. Enter `Help Get-RemedyTicket -Full` for full details.
 
 ### Get-RemedyChange
 
-You can get a specific change by partial or full Change ID Number as follows:
+You can get a specific Remedy Change by full or partial Change ID Number as follows:
 
     Get-RemedyChange -ID 12345
-
-This will return a small object with a default set of frequently needed properties available. To return an object with all of the properties available via the API add the `-Full` switch:
+    
+This will return a small object with a default set of frequently needed properties available. To return an object with all of the properties available via the API, add the `-Full` siwtch:
 
     Get-RemedyChange -ID 12345 -Full
+    
+There are many other parameters for filtering/retrieving resuts in other ways e.g by `-Team`, `-Submitter`, `-Customer` etc. Enter `Help Get-RemedyChange -Full` for full details.
 
+### Get-RemedyProblem
+
+You can get a specific Remedy Problem record by full or partial Problem ID Number as follows:
+
+    Get-RemedyProblem -ID 12345
+    
+This will return a small object with a default set of frequently needed properties available. To return an object with all of the properties available via the API, add the `-Full` siwtch:
+
+    Get-RemedyProblem -ID 12345 -Full
+    
+There are many other parameters for filtering/retrieving resuts in other ways e.g by `-Team`, `-Submitter`, `-Customer` etc. Enter `Help Get-RemedyProblem -Full` for full details.
+
+### Get-RemedySolution
+
+You can get a specific Remedy Solution record by full or partial Solution ID Number as follows:
+
+    Get-RemedySolution -ID 12345
+    
+This will return a small object with a default set of frequently needed properties available. To return an object with all of the properties available via the API, add the `-Full` siwtch:
+
+    Get-RemedySolution -ID 12345 -Full
+    
+There are many other parameters for filtering/retrieving resuts in other ways e.g by `-Team`, `-Submitter`, `-Customer` etc. Enter `Help Get-RemedySolution -Full` for full details.
+
+### Get-RemedyKnownError
+
+You can get a specific Remedy Known Error record by full or partial Known Error ID Number as follows:
+
+    Get-RemedyKnownError -ID 12345
+    
+This will return a small object with a default set of frequently needed properties available. To return an object with all of the properties available via the API, add the `-Full` siwtch:
+
+    Get-RemedyKnownError -ID 12345 -Full
+    
+There are many other parameters for filtering/retrieving resuts in other ways e.g by `-Team`, `-Submitter`, `-Customer` etc. Enter `Help Get-RemedyKnownError -Full` for full details.
+
+### Get-RemedyWorkLog
+
+You can get the worklog entries associated with a ticket (Incident/Request) by doing the following:
+
+    Get-RemedyTicket -ID 12345 | Get-RemedyWorkLog
+
+You can get the worklog entries associated with a Change by doing one of the following:
+
+    Get-RemedyChange -ID 12345 | Get-RemedyWorkLog
+    Get-RemedyWorkLog -ID 12345 -Type Change
+    
+You can get the worklog entries associated with a Problem by doing one of the following:
+
+    Get-RemedyProblem -ID 12345 | Get-RemedyWorkLog
+    Get-RemedyWorkLog -ID 12345 -Type Problem
+
+You can get the worklog entries associated with a Solution by doing one of the following:
+
+    Get-RemedySolution -ID 12345 | Get-RemedyWorkLog
+    Get-RemedyWorkLog -ID 12345 -Type Solution
+
+You can get the worklog entries associated with a Known Error by doing one of the following:
+
+    Get-RemedyKnownError -ID 12345 | Get-RemedyWorkLog
+    Get-RemedyWorkLog -ID 12345 -Type KnownError
+    
+You can filter for a specific type of worklog by specifying `-WorkLogType`. E.g:
+
+    Get-RemedyChange -ID 12345 | Get-RemedyWorkLog -WorkLogType 'Resolution'
+    
+There are many other parameters for filtering the results of `Get-RemedyWorkLog`. Enter `Help Get-RemedyWorkLog -Full` to learn more.
+    
 ### Get-RemedyTeam
 
 You can get the members of a specified Remedy Support Team with this command.
@@ -76,6 +134,4 @@ You can see a list of available Remedy interfaces/forms by running:
 
     Get-RemedyInterfaces
     
-This is just helpful if you want to explore the API and potentially extend the module.
-
-
+This command is just helpful if you want to explore the API, understand the schema/fields and potentially extend this module.
