@@ -8,7 +8,7 @@ This project is a PowerShell module for interacting with the BMC Remedy ARS Rest
 
 After installation, you will need to set your Remedy API URL and credentials. You do this by running:
 
-    Set-RemedyAPIConfig -APIURL https://remedy-itsm.savvis.net/arapi/DC2ITSMAPPPD02 -IncidentURL https://remedy-itsm.savvis.net/arsys/forms/cmdbapppd/HPD:Help%20Desk
+    Set-RemedyAPIConfig -APIURL https://yourremedy.url.whatever/arapi/yourmidtearserver -IncidentURL https://yourremedy.url.whatever/arsys/forms/cmdbapppd/HPD:Help%20Desk
     
 Which will then prompt you to enter credentials. These are saved as an encrypted string to your userprofile directory by default (you can redirect this by using `-File`).
 
