@@ -96,5 +96,5 @@ Describe 'Get-RemedyProblem' -Tag Unit {
         }
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

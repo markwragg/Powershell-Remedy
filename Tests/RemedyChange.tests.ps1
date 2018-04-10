@@ -105,5 +105,5 @@ Describe 'Get-RemedyChange' -Tag Unit {
         }
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

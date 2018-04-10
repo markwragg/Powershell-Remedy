@@ -95,5 +95,5 @@ Describe 'Get-RemedyTicket' -Tag Unit {
         }
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

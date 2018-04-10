@@ -48,5 +48,5 @@ Describe "Get-RemedyInterface" -Tag Unit {
     }
 
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

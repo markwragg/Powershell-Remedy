@@ -96,5 +96,5 @@ Describe 'Get-RemedyKnownError' -Tag Unit {
         }
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

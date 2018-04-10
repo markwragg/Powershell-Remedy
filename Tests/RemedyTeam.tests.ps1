@@ -70,5 +70,5 @@ Describe 'Get-RemedyTeam' -Tag Unit {
         }
     }
     
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

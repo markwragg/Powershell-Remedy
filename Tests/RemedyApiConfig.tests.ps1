@@ -39,7 +39,7 @@ Describe "Set-RemedyApiConfig" -Tag Unit {
         {$SetConfig.Credentials | ConvertFrom-SecureString} | Should Not Throw
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }
 
 
@@ -90,7 +90,7 @@ Describe "Get-RemedyApiConfig" -Tag Unit {
         }
     }
     
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }
 
 
@@ -134,7 +134,7 @@ Describe "Update-RemedyApiConfig" -Tag Unit {
         {$UpdateConfig.Credentials | ConvertFrom-SecureString} | Should Not Throw
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }
 
 
@@ -162,7 +162,7 @@ Describe "Test-RemedyApiConfig" -Tag Unit {
             $TestConfig | Should Be True
         }
     
-        Assert-VerifiableMocks
+        Assert-VerifiableMock
     }
 
     Context "Authentication Failure API Response" {
@@ -205,5 +205,5 @@ Describe "Test-RemedyApiConfig" -Tag Unit {
         }
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

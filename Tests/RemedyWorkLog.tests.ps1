@@ -61,5 +61,5 @@ Describe 'Get-RemedyWorkLog' -Tag Unit {
         }
     }
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

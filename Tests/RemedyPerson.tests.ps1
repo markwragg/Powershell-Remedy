@@ -89,5 +89,5 @@ Describe 'Get-RemedyPerson' -Tag Unit {
         }
     }    
 
-    Assert-VerifiableMocks
+    Assert-VerifiableMock
 }

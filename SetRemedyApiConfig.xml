@@ -1,0 +1,13 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <S N="APIURL">https://mock.setconfig.com/arapi/midservername</S>
+      <SS N="Credentials">01000000d08c9ddf0115d1118c7a00c04fc297eb0100000053ccf39b737aaa42a5acfd9ef6cfe5a50000000002000000000003660000c0000000100000004a8e2b94c06e386cf5ff7707700e30cf0000000004800000a000000010000000ba716a19fa8eefda87587425f27cebfa40000000fdffbdf56589bf90b5fc7e84f27fdd20cb303474f4c20c91d8ec1b2fbb4f1c25992e779c3cae182fec52ebed1a3e25de644f2c905649b4148ac1dae88760f375140000003e3eb90b30ebfbfd99aa15470aca42bd410fe4c3</SS>
+      <S N="IncidentURL">https://mock.setconfig.com/arsys/forms/helpdesk</S>
+    </MS>
+  </Obj>
+</Objs>
