@@ -1,5 +1,5 @@
 ﻿# PSScriptAnalyzer tests
-$ExcludeRules = 'PSAvoidUsingPlainTextForPassword','PSUseDeclaredVarsMoreThanAssignments','PSAvoidUsingConvertToSecureStringWithPlainText'
+$ExcludeRules = 'PSAvoidUsingPlainTextForPassword','PSUseDeclaredVarsMoreThanAssignments','PSAvoidUsingConvertToSecureStringWithPlainText','PSAvoidTrailingWhitespace'
 
 $Scripts = Get-ChildItem “$PSScriptRoot\..\” -Filter ‘*.ps1’ -Exclude '*.tests.ps1','build.ps1','install.ps1','psake.ps1' -Recurse
 $Modules = Get-ChildItem “$PSScriptRoot\..\” -Filter ‘*.psm1’ -Recurse
