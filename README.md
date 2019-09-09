@@ -1,6 +1,6 @@
 # Powershell-Remedy
 
-[![Build status](https://ci.appveyor.com/api/projects/status/8ph5oelqby89gaxr?svg=true)](https://ci.appveyor.com/project/markwragg/powershell-remedy) ![Test Coverage](https://img.shields.io/badge/coverage-82%25-yellow.svg?maxAge=60)
+[![Build Status](https://dev.azure.com/markwragg/GitHub/_apis/build/status/markwragg.Powershell-Remedy?branchName=master)](https://dev.azure.com/markwragg/GitHub/_build/latest?definitionId=6&branchName=master) ![Test Coverage](https://img.shields.io/badge/coverage-82%25-yellow.svg?maxAge=60)
 
 This project is a PowerShell module for interacting with the BMC Remedy ARS Rest API. It has been tested against a system that is running Remedy v9. Results with other versions/implementations of Remedy may vary.
 
