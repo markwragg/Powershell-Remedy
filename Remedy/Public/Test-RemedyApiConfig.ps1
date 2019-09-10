@@ -2,10 +2,20 @@
 <#
 .SYNOPSIS
     Tests credentials and URL for use with the Remedy API.
+
+.DESCRIPTION
+    Use this cmdlet to validate your Remedy API credentials.
+
+.EXAMPLE
+    Test-RemedyAPIConfig
+
+    Uses the Remedy API config in your userprofile to test the credentials are valid.
+
 #>
     [cmdletbinding()]
     [OutputType([Boolean])]
     Param(
+        #Path to your Remedy API config file.
         $Path = "$env:USERPROFILE\$env:USERNAME-RemedyApi.xml"
     )
     

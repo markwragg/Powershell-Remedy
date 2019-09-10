@@ -2,6 +2,7 @@
 <#
 .SYNOPSIS
     Opens a Remedy Incident URL in your default web browser.
+
 .DESCRIPTION
     This function can be used to open one or more Remedy Incidents in your browser. It accepts input from the pipeline
     so can be used in conjunction with Get-RemedyTicket. You can also input a comma-separated list of Incident IDs either
@@ -9,12 +10,19 @@
     
     By default this function will prompt if you want to continue every 5 URLs it opens. If you want to disable this prompt
     use -Force.
+
 .EXAMPLE
     Invoke-Remedy -ID INC000002264704
+
+    Open the specified incident.
 .EXAMPLE
     2160742,2264704 | Invoke-Remedy
+
+    Open the specified incidents.
 .EXAMPLE
     Get-RemedyTicket -ID 2160742 | Invoke-Remedy
+
+    Open the specified ticket.
 #>
     [cmdletbinding(DefaultParameterSetName='ByID',SupportsShouldProcess)]
     Param (

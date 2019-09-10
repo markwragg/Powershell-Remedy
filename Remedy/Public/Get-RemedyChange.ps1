@@ -1,79 +1,96 @@
 ﻿Function Get-RemedyChange {
 <#
-.SYNOPSIS
-    Retrieves BMC Remedy Change details via the API by ID number or other specified criteria such as Assignee, Customer, Team.
-.DESCRIPTION
-    This cmdlet queries the Remedy API for Changes as specified by ID number or by combining one or more of the filter parameters.
-    Beware that the Remedy API will return a maximum of 5000 incidents in a single request. If you need to exceed this, make multiple
-    requests (e.g by separating by date range) and then combine the results.
-.EXAMPLE
-    Get-RemedyChange -ID 1234567
-.EXAMPLE
-    Get-RemedyChange -Status Open -Team Windows
-.EXAMPLE
-    Get-RemedyChange -Status Open -Customer 'Contoso'
-.EXAMPLE
-    Get-RemedyChange -Status Open -Team Windows -Customer 'Fabrikam'
-.EXAMPLE
-    Get-RemedyChange -Team Windows -After 01/15/2017 -Before 02/15/2017
+    .SYNOPSIS
+        Retrieves BMC Remedy Change details via the API by ID number or other specified criteria such as Assignee, Customer, Team.
+
+    .DESCRIPTION
+        This cmdlet queries the Remedy API for Changes as specified by ID number or by combining one or more of the filter parameters.
+        Beware that the Remedy API will return a maximum of 5000 incidents in a single request. If you need to exceed this, make multiple
+        requests (e.g by separating by date range) and then combine the results.
+
+    .EXAMPLE
+        Get-RemedyChange -ID 1234567
+
+        Returns the specified change record.
+
+    .EXAMPLE
+        Get-RemedyChange -Status Open -Team Windows
+
+        Returns all open changes for the specified team.
+
+    .EXAMPLE
+        Get-RemedyChange -Status Open -Customer 'Contoso'
+
+        Returns all open changes for the specified customer.
+
+    .EXAMPLE
+        Get-RemedyChange -Status Open -Team Windows -Customer 'Fabrikam'
+
+        Returns all open changes for the specified customer where assigned to the specified team.
+
+    .EXAMPLE
+        Get-RemedyChange -Team Windows -After 01/15/2019 -Before 02/15/2019
+
+        Returns all changes for the specified team between the specified dates.
 #>
     [cmdletbinding()]
     Param(
-        #One or more Change ID numbers.
+        # One or more Change ID numbers.
         [Parameter(Position=0,ValueFromPipeline,ValueFromPipelineByPropertyName)]
         [String[]]$ID = '',
         
-        #Changes assigned to the specified team.
+        # Changes assigned to the specified team.
         [String]$Team,
         
-        #Changes raised by the specified customer.
+        # Changes raised by the specified customer.
         [String]$Customer,
         
-        #Changes raised for a specific configuration item, e.g a server or other device.
+        # Changes raised for a specific configuration item, e.g a server or other device.
         [Alias('CI')]
         [String]$ConfigurationItem,
         
-        #Changes assigned to the specified individual.
+        # Changes assigned to the specified individual.
         [String[]]$Assignee,
 
-        #Changes submitted by the specified individual.
+        # Changes submitted by the specified individual.
         [String[]]$Submitter,
 
-        #Changes filtered by specified status. You can also specific 'AllOpen' or 'AllClosed': AllOpen = ('Draft','Request For Authorization','Request For Change','Planning In Progress','Scheduled For Review','Scheduled For Approval','Scheduled','Implementation In Progress','Pending','Rejected'); AllClosed = ('Completed','Closed','Cancelled')
+        # Changes filtered by specified status. You can also specify 'AllOpen' or 'AllClosed': AllOpen = ('Draft','Request For Authorization','Request For Change','Planning In Progress','Scheduled For Review','Scheduled For Approval','Scheduled','Implementation In Progress','Pending','Rejected'); AllClosed = ('Completed','Closed','Cancelled')
         [ValidateSet('AllOpen','AllClosed','Draft','Request For Authorization','Request For Change','Planning In Progress','Scheduled For Review','Scheduled For Approval','Scheduled','Implementation In Progress','Pending','Rejected','Completed','Closed','Cancelled')] 
         [String]$Status,
         
+        # Changes filtered by one or more specified approval status: Pending, Approved or Rejected.
         [ValidateSet('Pending','Approved','Rejected','')]
         [String[]]$ApprovalStatus,
 
-        #Include Changes of one or more specific types: Normal, Standard, Expedited.
+        # Include Changes of one or more specific types: Normal, Standard, Expedited.
         [ValidateSet('Normal','Standard','Expedited','Emergency','Latent','No Impact','')]
         [String[]]$Type,
 
-        #Exclude Changes of one or more specific types: Normal, Standard, Expedited.
+        # Exclude Changes of one or more specific types: Normal, Standard, Expedited.
         [ValidateSet('Normal','Standard','Expedited','Emergency','Latent','No Impact','')]
         [String[]]$ExcludeType,
 
-        #Include Changes of one or more specific priorities: Low, Medium, High, Critical.
+        # Include Changes of one or more specific priorities: Low, Medium, High, Critical.
         [ValidateSet('Low','Medium','High','Critical','')]
         [String[]]$Priority = '',
         
-        #Changes with a 'scheduled start date' that is after this date. Use US date format: mm/dd/yyyy
+        # Changes with a 'scheduled start date' that is after this date. Use US date format: mm/dd/yyyy
         [DateTime]$After,
         
-        #Changes with a 'scheduled start date' that is before this date. Use US date format: mm/dd/yyyy
+        # Changes with a 'scheduled start date' that is before this date. Use US date format: mm/dd/yyyy
         [DateTime]$Before,
 
-        #Return all available data fields from Remedy.
+        # Return all available data fields from Remedy.
         [Switch]$Full,
 
-        #Match the string exactly.
+        # Match the string exactly.
         [Switch]$Exact,
 
-        #An encoded string representing your Remedy Credentials as generated by the Set-RemedyApiConfig cmdlet.
+        # An encoded string representing your Remedy Credentials as generated by the Set-RemedyApiConfig cmdlet.
         [String]$EncodedCredentials = (Get-RemedyApiConfig).Credentials,
 
-        #The Remedy API URL. E.g: https://<localhost>:<port>/api
+        # The Remedy API URL. E.g: https://<localhost>:<port>/api
         [String]$APIURL = (Get-RemedyApiConfig).APIURL
     )
     
