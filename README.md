@@ -1,7 +1,7 @@
 # Powershell-Remedy
 
 [![Build Status](https://github.com/markwragg/Powershell-Remedy/actions/workflows/build.yml/badge.svg)](https://github.com/markwragg/Powershell-Remedy/actions/workflows/build.yml)
-![coverage](https://img.shields.io/badge/coverage-81%25-yellow.svg)
+![coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)
 [![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Remedy?label=PS%20Gallery)](https://www.powershellgallery.com/packages/Remedy)
 [![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/Remedy?color=D3D3D3)](https://www.powershellgallery.com/packages/Remedy)
 
