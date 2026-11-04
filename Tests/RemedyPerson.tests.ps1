@@ -1,93 +1,94 @@
-﻿$here = $PSScriptRoot
-$sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
-$sut | ForEach-Object { . $_.FullName }
+BeforeAll {
+    $here = $PSScriptRoot
+    $sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
+    $sut | ForEach-Object { . $_.FullName }
+}
+
+$PersonCases = '', 'Staff', 'Exact', @('Staff', 'Exact') | ForEach-Object {
+
+    $Settings = @{ Name = 'Clark Kent' }
+
+    foreach ($Switch in @($_)) {
+        if ($Switch -eq 'Staff') { $Settings.Staff = $true }
+        if ($Switch -eq 'Exact') { $Settings.Exact = $true }
+    }
+
+    $Option = if ($_) { '-' + (@($_) -Join ' -') } else { '' }
+
+    @{ Settings = $Settings; Option = $Option }
+}
 
 Describe 'Get-RemedyPerson' -Tag Unit {
-    
-    Mock Get-RemedyApiConfig -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyApiConfig.xml }
-    
-    Mock Test-RemedyApiConfig -Verifiable { $True }
-    
-    Mock Invoke-RestMethod -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyPerson-InvokeRestMethod.xml }
-    
 
-    '','Staff','Exact',@('Staff','Exact') | ForEach-Object {
+    BeforeAll {
+        Mock Get-RemedyApiConfig -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyApiConfig.xml }
 
-        $Settings = @{Name = 'Clark Kent'}
-        
-        Switch ($_) {
-            'Staff' { $Settings.Add('Staff',$True) }
-            'Exact' { $Settings.Add('Exact',$True) }
+        Mock Test-RemedyApiConfig -Verifiable { $true }
+
+        Mock Invoke-RestMethod -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyPerson-InvokeRestMethod.xml }
+    }
+
+    Context 'Valid user tests for Get-RemedyPerson <Option>' -ForEach $PersonCases {
+
+        It 'Should not Throw for a valid user' {
+            { Get-RemedyPerson @Settings } | Should -Not -Throw
         }
 
-        If ($_) { $Option = '-' + ($_ -Join ' -') }
-
-        Context "Valid user tests for Get-RemedyPerson $Option" {
-
-            It 'Should not Throw for a valid user' {
-                {Get-RemedyPerson @Settings } | Should Not Throw
-            }
-    
-            $SomeUser = Get-RemedyPerson @Settings
-
-            It 'Should Not be Null or Empty for a valid user' {
-                $SomeUser | Should Not BeNullOrEmpty
-            }
-
-            It 'Should return Clark Kent' {
-                $SomeUser.'Full Name' | Should Be 'Clark Kent'
-            }
-
-            'Full Name','Remedy Login ID','JobTitle','Company','Internet E-mail','Support Staff','Submit Date' | ForEach-Object {
-                It "Should return a $_ property" {
-                    $SomeUser.$_ | Should Not Be $null
-                }
-            }
+        It 'Should Not be Null or Empty for a valid user' {
+            Get-RemedyPerson @Settings | Should -Not -BeNullOrEmpty
         }
 
-        Context "Valid user tests for Get-RemedyPerson -Full $Option" {
-
-            $SomeUserFull = Get-RemedyPerson @Settings -Full
-
-            It 'Should Not be Null or Empty for a valid user with -Full details' {
-                $SomeUserFull | Should Not BeNullOrEmpty
-            }
-
-            It "Should return Clark Kent's Nick Name as 'Superman'" {
-                $SomeUserFull.'Nick Name' | Should Be 'Superman'
-            }
-
-            'Full Name','Remedy Login ID','JobTitle','Company','Internet E-mail','Support Staff','Submit Date' | ForEach-Object {
-                It "Should return a $_ property" {
-                    $SomeUserFull.$_ | Should Not Be $null
-                }
-            }
+        It 'Should return Clark Kent' {
+            (Get-RemedyPerson @Settings).'Full Name' | Should -Be 'Clark Kent'
         }
 
-        Context "Invalid User for Get-RemedyPerson $Option" {
-    
+        It 'Should return a <_> property' -ForEach 'Full Name', 'Remedy Login ID', 'JobTitle', 'Company', 'Internet E-mail', 'Support Staff', 'Submit Date' {
+            (Get-RemedyPerson @Settings).$_ | Should -Not -Be $null
+        }
+    }
+
+    Context 'Valid user tests for Get-RemedyPerson -Full <Option>' -ForEach $PersonCases {
+
+        It 'Should Not be Null or Empty for a valid user with -Full details' {
+            Get-RemedyPerson @Settings -Full | Should -Not -BeNullOrEmpty
+        }
+
+        It "Should return Clark Kent's Nick Name as 'Superman'" {
+            (Get-RemedyPerson @Settings -Full).'Nick Name' | Should -Be 'Superman'
+        }
+
+        It 'Should return a <_> property' -ForEach 'Full Name', 'Remedy Login ID', 'JobTitle', 'Company', 'Internet E-mail', 'Support Staff', 'Submit Date' {
+            (Get-RemedyPerson @Settings -Full).$_ | Should -Not -Be $null
+        }
+    }
+
+    Context 'Invalid User for Get-RemedyPerson <Option>' -ForEach $PersonCases {
+
+        BeforeAll {
             Mock Invoke-RestMethod -Verifiable { }
-        
-            It 'Should not Throw for an invalid user' {
-                {Get-RemedyPerson @Settings } | Should Not Throw
-            }
-
-            $NotAUser = Get-RemedyPerson @Settings
-
-            It 'Should be Null or Empty for an invalid user' { 
-                $NotAUser | Should BeNullOrEmpty 
-            }
         }
 
-        Context "Failed API config test for Get-RemedyPerson $Option" {
+        It 'Should not Throw for an invalid user' {
+            { Get-RemedyPerson @Settings } | Should -Not -Throw
+        }
 
+        It 'Should be Null or Empty for an invalid user' {
+            Get-RemedyPerson @Settings | Should -BeNullOrEmpty
+        }
+    }
+
+    Context 'Failed API config test for Get-RemedyPerson <Option>' -ForEach $PersonCases {
+
+        BeforeAll {
             Mock Test-RemedyApiConfig -Verifiable { }
-    
-            It "Should Throw" {
-                {Get-RemedyPerson @Settings} | Should Throw 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
-            }
         }
-    }    
 
-    Assert-VerifiableMock
+        It 'Should Throw' {
+            { Get-RemedyPerson @Settings } | Should -Throw -ExpectedMessage 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
+        }
+    }
+
+    It 'Should have invoked all verifiable mocks' {
+        Should -InvokeVerifiable
+    }
 }

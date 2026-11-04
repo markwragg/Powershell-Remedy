@@ -29,10 +29,9 @@
 
             Write-Verbose "$($Result.Content)"
 
-            If ($Result.Content -like 'ARException: ERROR (623): Authentication failed;*'){ 
+            If ($Result.Content -like 'ARException: ERROR (623): Authentication failed;*'){
                 Update-RemedyApiConfig
-                Test-RemedyApiConfig
-                Break
+                return Test-RemedyApiConfig -Path $Path
             }
 
             Try {

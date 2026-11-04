@@ -9,7 +9,8 @@ Retrieves BMC Remedy Change details via the API by ID number or other specified 
 Get-RemedyChange [[-ID] <String[]>] [-Team <String>] [-Customer <String>] [-ConfigurationItem <String>]
  [-Assignee <String[]>] [-Submitter <String[]>] [-Status <String>] [-ApprovalStatus <String[]>]
  [-Type <String[]>] [-ExcludeType <String[]>] [-Priority <String[]>] [-After <DateTime>] [-Before <DateTime>]
- [-Full] [-Exact] [-EncodedCredentials <String>] [-APIURL <String>] [<CommonParameters>]
+ [-Full] [-Exact] [-EncodedCredentials <String>] [-APIURL <String>] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -316,9 +317,23 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

@@ -1,43 +1,49 @@
-﻿$here = $PSScriptRoot
-$sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
-$sut | ForEach-Object { . $_.FullName }
+BeforeAll {
+    $here = $PSScriptRoot
+    $sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
+    $sut | ForEach-Object { . $_.FullName }
+}
 
-Describe "Get-RemedyTicket" -Tag Integration {
+Describe 'Get-RemedyTicket' -Tag Integration {
     Import-Module "$PSScriptRoot\..\Remedy\*.psd1" -Force
-    
-    Context "By ID" {
 
-        $Ticket = Get-RemedyTicket -ID INC000002139774 -Exact -Full
+    Context 'By ID' {
 
-        It "Should return ticket data" {
-            $Ticket | Should Not BeNullOrEmpty
+        BeforeAll {
+            $Ticket = Get-RemedyTicket -ID INC000002139774 -Exact -Full
         }
-        It "Should return an Incident Number property" {
-            $Ticket.'Incident Number' | Should Be 'INC000002139774'
+
+        It 'Should return ticket data' {
+            $Ticket | Should -Not -BeNullOrEmpty
         }
-        It "Should return 1 ticket" {
-            @($Ticket).count | Should Be 1
+        It 'Should return an Incident Number property' {
+            $Ticket.'Incident Number' | Should -Be 'INC000002139774'
         }
-        It "Should be a [PSCustomObject]" {
-            $Ticket | Should BeOfType PSCustomObject
+        It 'Should return 1 ticket' {
+            @($Ticket).count | Should -Be 1
+        }
+        It 'Should be a [PSCustomObject]' {
+            $Ticket | Should -BeOfType [System.Management.Automation.PSCustomObject]
         }
     }
-    
-    Context "By Team" {
 
-        $Tickets = Get-RemedyTicket -Team Windows_T3 -After (get-date).AddMonths(-1) -Exact -Full
+    Context 'By Team' {
 
-        It "Should return ticket data" {
-            $Tickets | Should Not BeNullOrEmpty
+        BeforeAll {
+            $Tickets = Get-RemedyTicket -Team Windows_T3 -After (Get-Date).AddMonths(-1) -Exact -Full
         }
-        It "Should return an Incident Number property" {
-            $Tickets.'Incident Number' | Should Not BeNullOrEmpty
+
+        It 'Should return ticket data' {
+            $Tickets | Should -Not -BeNullOrEmpty
         }
-        It "Should return at least 1 ticket" {
-            @($Tickets).count | Should BeGreaterThan 1
+        It 'Should return an Incident Number property' {
+            $Tickets.'Incident Number' | Should -Not -BeNullOrEmpty
         }
-        It "Should be a [PSCustomObject]" {
-            $Tickets | Should BeOfType PSCustomObject
+        It 'Should return at least 1 ticket' {
+            @($Tickets).count | Should -BeGreaterThan 1
+        }
+        It 'Should be a [PSCustomObject]' {
+            $Tickets | Should -BeOfType [System.Management.Automation.PSCustomObject]
         }
     }
 }

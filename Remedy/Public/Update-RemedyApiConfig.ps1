@@ -35,8 +35,7 @@
     )
 
     If (-not $APIURL) {
-        Set-RemedyApiConfig -Credentials $Credentials
-        Break
+        return Set-RemedyApiConfig -Credentials $Credentials
     }
 
     $User = ($Credentials.GetNetworkCredential().username).ToLower()

@@ -1,0 +1,6 @@
+# .gitignore file
+
+/Staging/*
+/Artifacts/*
+/BuildOutput/*
+/**/coverage.xml

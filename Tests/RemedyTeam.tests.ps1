@@ -1,37 +1,37 @@
-﻿$here = $PSScriptRoot
-$sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
-$sut | ForEach-Object { . $_.FullName }
+BeforeAll {
+    $here = $PSScriptRoot
+    $sut = Get-ChildItem "$here\..\Remedy\*.ps1" -Recurse -File
+    $sut | ForEach-Object { . $_.FullName }
+}
 
 
 Describe 'Get-RemedyTeam' -Tag Unit {
-    
-    Mock Get-RemedyApiConfig -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyApiConfig.xml }
-    Mock Test-RemedyApiConfig -Verifiable { $True }
-    Mock Get-RemedyInterface -Verifiable { @{'Support Group ID' = 'SGP000000001234'} }
-    Mock Invoke-RestMethod -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyTeam-InvokeRestMethod.xml }
+
+    BeforeAll {
+        Mock Get-RemedyApiConfig -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyApiConfig.xml }
+        Mock Test-RemedyApiConfig -Verifiable { $true }
+        Mock Get-RemedyInterface -Verifiable { @{ 'Support Group ID' = 'SGP000000001234' } }
+        Mock Invoke-RestMethod -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyTeam-InvokeRestMethod.xml }
+    }
 
     Context 'Valid team' {
 
         It 'Should not Throw for a valid team' {
-            {Get-RemedyTeam -Name 'Reporters'} | Should Not Throw
+            { Get-RemedyTeam -Name 'Reporters' } | Should -Not -Throw
         }
-    
-        $SomeTeam = Get-RemedyTeam -name 'Reporters'
 
         It 'Should Not be Null or Empty for a valid team' {
-            $SomeTeam | Should Not BeNullOrEmpty
+            Get-RemedyTeam -Name 'Reporters' | Should -Not -BeNullOrEmpty
         }
 
-        'Clark Kent','Lois Lane' | ForEach-Object {
-            It "Should return $_" {
-                $_ -in $SomeTeam.'Full Name' | Should Be True
-            }
+        It 'Should return <_>' -ForEach 'Clark Kent', 'Lois Lane' {
+            $SomeTeam = Get-RemedyTeam -Name 'Reporters'
+            $_ -in $SomeTeam.'Full Name' | Should -Be $true
         }
 
-        'Full Name','Login ID' | ForEach-Object {
-            It "Should return a $_ property" {
-                $SomeTeam.$_ | Should Not Be $null
-            }
+        It 'Should return a <_> property' -ForEach 'Full Name', 'Login ID' {
+            $SomeTeam = Get-RemedyTeam -Name 'Reporters'
+            $SomeTeam.$_ | Should -Not -Be $null
         }
     }
 
@@ -39,36 +39,36 @@ Describe 'Get-RemedyTeam' -Tag Unit {
     Context 'Valid team with -Full details' {
 
         It 'Should not Throw for a valid team' {
-            {Get-RemedyTeam -Name 'Reporters' -Full} | Should Not Throw
+            { Get-RemedyTeam -Name 'Reporters' -Full } | Should -Not -Throw
         }
-    
-        $SomeTeamFull = Get-RemedyTeam -name 'Reporters' -Full
-       
+
         It 'Should Not be Null or Empty for a valid team' {
-            $SomeTeamFull | Should Not BeNullOrEmpty
+            Get-RemedyTeam -Name 'Reporters' -Full | Should -Not -BeNullOrEmpty
         }
 
-        'Clark Kent','Lois Lane' | ForEach-Object {
-            It "Should return $_" {
-                $_ -in $SomeTeamFull.'Full Name' | Should Be True
-            }
+        It 'Should return <_>' -ForEach 'Clark Kent', 'Lois Lane' {
+            $SomeTeamFull = Get-RemedyTeam -Name 'Reporters' -Full
+            $_ -in $SomeTeamFull.'Full Name' | Should -Be $true
         }
 
-        'Full Name','Login ID','Status','Submit Date' | ForEach-Object {
-            It "Should return a $_ property" {
-                $SomeTeamFull.$_ | Should Not Be $null
-            }
+        It 'Should return a <_> property' -ForEach 'Full Name', 'Login ID', 'Status', 'Submit Date' {
+            $SomeTeamFull = Get-RemedyTeam -Name 'Reporters' -Full
+            $SomeTeamFull.$_ | Should -Not -Be $null
         }
     }
 
-    Mock Get-RemedyInterface  -Verifiable { }
-    
     Context 'Invalid Team' {
 
+        BeforeAll {
+            Mock Get-RemedyInterface -Verifiable { }
+        }
+
         It 'Should Throw for an invalid team' {
-            {Get-RemedyTeam -Name 'SuperVillians'} | Should Throw
+            { Get-RemedyTeam -Name 'SuperVillians' } | Should -Throw
         }
     }
-    
-    Assert-VerifiableMock
+
+    It 'Should have invoked all verifiable mocks' {
+        Should -InvokeVerifiable
+    }
 }
