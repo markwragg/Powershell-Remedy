@@ -68,6 +68,28 @@ Describe 'Get-RemedyTeam' -Tag Unit {
         }
     }
 
+    Context 'Failed API config test' {
+
+        BeforeAll {
+            Mock Test-RemedyApiConfig -Verifiable { $false }
+        }
+
+        It 'Should Throw' {
+            { Get-RemedyTeam -Name 'Reporters' } | Should -Throw -ExpectedMessage 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
+        }
+    }
+
+    Context 'API connectivity error' {
+
+        BeforeAll {
+            Mock Invoke-RestMethod -Verifiable { throw 'Some error' }
+        }
+
+        It 'Should write a non-terminating error without throwing' {
+            { Get-RemedyTeam -Name 'Reporters' -ErrorAction SilentlyContinue } | Should -Not -Throw
+        }
+    }
+
     It 'Should have invoked all verifiable mocks' {
         Should -InvokeVerifiable
     }

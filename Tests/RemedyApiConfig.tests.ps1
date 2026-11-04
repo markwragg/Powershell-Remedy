@@ -100,6 +100,29 @@ Describe 'Get-RemedyApiConfig' -Tag Unit {
         }
     }
 
+    Context 'Valid config with real decryption' {
+
+        BeforeAll {
+            $SecureCredentials = ConvertTo-SecureString 'dGVzdHVzZXI6dGVzdHBhc3N3b3Jk' -AsPlainText -Force
+
+            Mock Import-Clixml -Verifiable {
+                @{
+                    APIURL      = 'https://mock.server.com/arapi/midservername'
+                    IncidentURL = 'https://mock.server.com/arsys/forms/helpdesk'
+                    Credentials = $SecureCredentials
+                }
+            }
+        }
+
+        It 'Should decrypt the Credentials SecureString' {
+            (Get-RemedyApiConfig).Credentials | Should -Be 'dGVzdHVzZXI6dGVzdHBhc3N3b3Jk'
+        }
+
+        It 'Should have invoked all verifiable mocks' {
+            Should -InvokeVerifiable
+        }
+    }
+
     Context 'Invalid config' {
 
         BeforeAll {
@@ -218,6 +241,33 @@ Describe 'Test-RemedyApiConfig' -Tag Unit {
         It 'Should retry via Update-RemedyApiConfig and return True once authentication succeeds' {
             Test-RemedyApiConfig | Should -Be $true
             Should -Invoke -CommandName 'Update-RemedyApiConfig' -Times 3 -Exactly
+        }
+    }
+
+    Context 'No config set' {
+
+        BeforeAll {
+            Mock Get-RemedyApiConfig -Verifiable { throw 'Remedy API config not set. Use Set-RemedyApiConfig first.' }
+        }
+
+        It 'Should return False without throwing' {
+            { Test-RemedyApiConfig } | Should -Not -Throw
+            Test-RemedyApiConfig | Should -Be $false
+        }
+    }
+
+    Context 'Web request connectivity error' {
+
+        BeforeAll {
+            Mock Get-RemedyApiConfig -Verifiable {
+                Import-Clixml -Path $here\Mock-GetRemedyApiConfig.xml
+            }
+            Mock Invoke-WebRequest -Verifiable { throw 'Some error' }
+        }
+
+        It 'Should return False without throwing' {
+            { Test-RemedyApiConfig } | Should -Not -Throw
+            Test-RemedyApiConfig | Should -Be $false
         }
     }
 

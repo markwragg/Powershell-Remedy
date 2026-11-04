@@ -28,6 +28,16 @@ Describe 'Get-RemedyPerson' -Tag Unit {
         Mock Invoke-RestMethod -Verifiable { Import-Clixml -Path $here\Mock-GetRemedyPerson-InvokeRestMethod.xml }
     }
 
+    It 'Should return if -Login is provided' {
+        { Get-RemedyPerson -Login 'ckent' } | Should -Not -Throw
+        Get-RemedyPerson -Login 'ckent' | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Should return if -Email is provided' {
+        { Get-RemedyPerson -Email 'ckent@dailyplanet.com' } | Should -Not -Throw
+        Get-RemedyPerson -Email 'ckent@dailyplanet.com' | Should -Not -BeNullOrEmpty
+    }
+
     Context 'Valid user tests for Get-RemedyPerson <Option>' -ForEach $PersonCases {
 
         It 'Should not Throw for a valid user' {
@@ -74,6 +84,17 @@ Describe 'Get-RemedyPerson' -Tag Unit {
 
         It 'Should be Null or Empty for an invalid user' {
             Get-RemedyPerson @Settings | Should -BeNullOrEmpty
+        }
+    }
+
+    Context 'API connectivity error' {
+
+        BeforeAll {
+            Mock Invoke-RestMethod -Verifiable { throw 'Some error' }
+        }
+
+        It 'Should write a non-terminating error without throwing' {
+            { Get-RemedyPerson -Name 'Clark Kent' -ErrorAction SilentlyContinue } | Should -Not -Throw
         }
     }
 

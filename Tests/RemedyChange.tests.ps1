@@ -18,8 +18,20 @@ Describe 'Get-RemedyChange' -Tag Unit {
         { Get-RemedyChange } | Should -Throw
     }
 
-    It 'Should return if <_> is provided' -ForEach 'ID', 'Team', 'Customer', 'Assignee', 'Submitter' {
+    It 'Should return if <_> is provided' -ForEach 'ID', 'Team', 'Customer', 'ConfigurationItem', 'Assignee', 'Submitter' {
         $Param = @{ $_ = 'SomeValue' }
+
+        { Get-RemedyChange @Param } | Should -Not -Throw
+        Get-RemedyChange @Param | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Should return if -Exact is provided' {
+        { Get-RemedyChange -ID 'ValidID' -Exact } | Should -Not -Throw
+        Get-RemedyChange -ID 'ValidID' -Exact | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Should return if -After and -Before are provided' {
+        $Param = @{ Team = 'SomeValue'; After = (Get-Date).AddMonths(-1); Before = (Get-Date) }
 
         { Get-RemedyChange @Param } | Should -Not -Throw
         Get-RemedyChange @Param | Should -Not -BeNullOrEmpty
@@ -90,6 +102,39 @@ Describe 'Get-RemedyChange' -Tag Unit {
 
         It 'Should be Null or Empty for an invalid Change' {
             Get-RemedyChange -ID 'InvalidID' | Should -BeNullOrEmpty
+        }
+    }
+
+    Context 'Missing API configuration' {
+
+        BeforeAll {
+            Mock Get-RemedyApiConfig -Verifiable { @{ Credentials = ''; APIURL = '' } }
+        }
+
+        It 'Should Throw' {
+            { Get-RemedyChange -ID 'ValidID' } | Should -Throw -ExpectedMessage 'Remedy API Config not set. Set-RemedyApiConfig first.'
+        }
+    }
+
+    Context 'Failed API config test' {
+
+        BeforeAll {
+            Mock Test-RemedyApiConfig -Verifiable { $false }
+        }
+
+        It 'Should Throw' {
+            { Get-RemedyChange -ID 'ValidID' } | Should -Throw -ExpectedMessage 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
+        }
+    }
+
+    Context 'API connectivity error' {
+
+        BeforeAll {
+            Mock Invoke-RestMethod -Verifiable { throw 'Some error' }
+        }
+
+        It 'Should write a non-terminating error without throwing' {
+            { Get-RemedyChange -ID 'ValidID' -ErrorAction SilentlyContinue } | Should -Not -Throw
         }
     }
 

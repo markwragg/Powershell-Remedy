@@ -19,8 +19,27 @@ Describe 'Get-RemedyWorkLog' -Tag Unit {
         { Get-RemedyWorkLog } | Should -Throw
     }
 
-    It 'Should return if <_> is provided' -ForEach 'ID', 'Team', 'Title', 'Note', 'Submitter' {
+    It 'Should return if <_> is provided' -ForEach 'ID', 'Team', 'Title', 'Note', 'Submitter', 'WorkLogType' {
         $Param = @{ $_ = 'SomeValue' }
+
+        { Get-RemedyWorkLog @Param } | Should -Not -Throw
+        Get-RemedyWorkLog @Param | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Should return if -Exact is provided' {
+        { Get-RemedyWorkLog -ID 'ValidID' -Exact } | Should -Not -Throw
+        Get-RemedyWorkLog -ID 'ValidID' -Exact | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Should return if -After and -Before are provided' {
+        $Param = @{ Team = 'SomeValue'; After = (Get-Date).AddMonths(-1); Before = (Get-Date) }
+
+        { Get-RemedyWorkLog @Param } | Should -Not -Throw
+        Get-RemedyWorkLog @Param | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Should return if Type = <_> is provided' -ForEach 'Change', 'Problem', 'KnownError', 'Solution' {
+        $Param = @{ ID = 'SomeValue'; Type = $_ }
 
         { Get-RemedyWorkLog @Param } | Should -Not -Throw
         Get-RemedyWorkLog @Param | Should -Not -BeNullOrEmpty
@@ -56,6 +75,28 @@ Describe 'Get-RemedyWorkLog' -Tag Unit {
 
         It 'Should be Null or Empty for an invalid worklog' {
             Get-RemedyWorkLog -ID 'InvalidID' | Should -BeNullOrEmpty
+        }
+    }
+
+    Context 'Failed API config test' {
+
+        BeforeAll {
+            Mock Test-RemedyApiConfig -Verifiable { $false }
+        }
+
+        It 'Should Throw' {
+            { Get-RemedyWorkLog -ID 'ValidID' } | Should -Throw -ExpectedMessage 'Remedy API Test failed. Ensure the config has been set correctly via Set-RemedyApiConfig.'
+        }
+    }
+
+    Context 'API connectivity error' {
+
+        BeforeAll {
+            Mock Invoke-RestMethod -Verifiable { throw 'Some error' }
+        }
+
+        It 'Should write a non-terminating error without throwing' {
+            { Get-RemedyWorkLog -ID 'ValidID' -ErrorAction SilentlyContinue } | Should -Not -Throw
         }
     }
 
