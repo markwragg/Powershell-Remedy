@@ -101,6 +101,11 @@ jobs:
         shell: pwsh
         run: ./Build/build.ps1 -TaskList 'UpdateDocumentation'
 
+      - name: Update Wiki
+        if: github.event_name == 'push'
+        shell: pwsh
+        run: ./Build/build.ps1 -TaskList 'UpdateWiki'
+
       - name: Deploy
         id: deploy
         if: github.event_name == 'push'

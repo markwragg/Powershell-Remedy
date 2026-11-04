@@ -1,3 +1,8 @@
+# Normalizes path separators/casing
+function ConvertTo-ComparablePath ([string]$Path) {
+    ($Path -replace '\\', '/').TrimEnd('/').ToLowerInvariant()
+}
+
 # PSake makes variables declared here available in other scriptblocks
 Properties {
     $ProjectRoot = $ENV:BHProjectPath
@@ -29,6 +34,9 @@ Properties {
 
     # Documentation
     $DocumentationPath = Join-Path -Path $ProjectRoot -ChildPath 'Documentation'
+
+    # Wiki (GitHub wikis are backed by a separate '<repo>.wiki.git' repository)
+    $WikiPath = Join-Path -Path $ProjectRoot -ChildPath 'wiki'
 }
 
 
